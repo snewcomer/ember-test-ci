@@ -22,13 +22,14 @@ jobs:
         node-version: 14.x
 
     - uses: actions/cache@v2
+      id: yarn-cache
       with:
-        path: ~/.npm
-        key: ${{ runner.os }}-modules-${{ hashFiles('**/package-lock.json') }}
+        path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
+        key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn-lock.json') }}
     - name: Install Dependencies
-      run: npm install
+      run: yarn install
     - name: Lint
-      run: npm run lint
+      run: yarn lint
 
   floating:
     name: "Floating dependencies"
@@ -56,10 +57,11 @@ jobs:
         node-version: 14.x
 
     - uses: actions/cache@v2
+      id: yarn-cache
       with:
-        path: ~/.npm
-        key: ${{ runner.os }}-modules-${{ hashFiles('**/package-lock.json') }}
+        path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
+        key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn-lock.json') }}
     - name: Install Dependencies
-      run: npm ci
+      run: yarn install --frozen-lockfile
     - name: Run Tests
       run: ./node_modules/.bin/ember try:one ${{ matrix.try-scenario }}
